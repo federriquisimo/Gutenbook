@@ -22,7 +22,7 @@ public class GutenbookApplication implements CommandLineRunner {
                
        
        Principal principal = new Principal();
-		principal.muestraElMenu();
+		principal.muestraMenu();
     }
 
 }

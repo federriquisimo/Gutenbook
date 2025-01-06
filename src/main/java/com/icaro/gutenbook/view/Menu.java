@@ -30,11 +30,11 @@ public class Menu {
                         5.  Listar libros en español
                         6.  Listar libros en inglés
                         7.  Listar libros en alemán
-                        6.  Salir
+                        8.  Salir
                         
                         <=><=><=><=><=><=><=><=><=><<=><=><=><=><=><=><=><=><=><
                         
-                        Elije un opción válida :   
+                        Elije un opción válida del 1 al 8 :   
                        """);
     
         }
