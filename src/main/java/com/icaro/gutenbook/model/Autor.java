@@ -4,29 +4,47 @@
  */
 package com.icaro.gutenbook.model;
 
+
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
+
 @Entity
 @Table(name = "autores")
 public class Autor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    @Column(unique = true)
-    private String nombre;
-    private Integer fechaDeNacimiento;
-    private Integer fechaDeFallecimiento;
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Libro>libros;
+    private Long id;
 
-    public Autor(DatosAutor autor){
-        this.nombre=autor.nombre();
-        this.fechaDeNacimiento= autor.fechaDeNacimiento();
-        this.fechaDeFallecimiento= autor.fechaDeFallecimiento();
+    private String nombre;
+    private int birth_year;
+    private int death_year;
+
+    // Esto vincula al autor con los libros
+    @ManyToMany(mappedBy = "autor", fetch = FetchType.EAGER)
+    private List<Libro> libros = new ArrayList<>();
+
+    // ********  Constructores  ********
+
+    public Autor() {}
+
+    public Autor(String nombre, int birth_year, int death_year) {
+        this.nombre = nombre;
+        this.birth_year = birth_year;
+        this.death_year = death_year;
     }
 
-    public Autor(){};
+    // ********  Getters and Setters  **********
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getNombre() {
         return nombre;
@@ -36,20 +54,20 @@ public class Autor {
         this.nombre = nombre;
     }
 
-    public Integer getFechaDeNacimiento() {
-        return fechaDeNacimiento;
+    public int getBirth_year() {
+        return birth_year;
     }
 
-    public void setFechaDeNacimiento(Integer fechaNacimiento) {
-        this.fechaDeNacimiento = fechaNacimiento;
+    public void setBirth_year(int birth_year) {
+        this.birth_year = birth_year;
     }
 
-    public Integer getFechaDeFallecimiento() {
-        return fechaDeFallecimiento;
+    public int getDeath_year() {
+        return death_year;
     }
 
-    public void setFechaDeFallecimiento(Integer fechaFallecimiento) {
-        this.fechaDeFallecimiento = fechaFallecimiento;
+    public void setDeath_year(int death_year) {
+        this.death_year = death_year;
     }
 
     public List<Libro> getLibros() {
@@ -60,22 +78,13 @@ public class Autor {
         this.libros = libros;
     }
 
+    // To String
+
     @Override
     public String toString() {
-        return "Autor{" +
-                "nombre='" + nombre + '\'' +
-                ", fechaNacimiento=" + fechaDeNacimiento +
-                ", fechaFallecimiento=" + fechaDeFallecimiento +
-                ", libros=" + libros +
-                '}';
-    }
+        return "\n" + "Autor: " + this.nombre + "\n" +
+                " Fecha de Nacimiento: " + this.birth_year + "\n" +
+                " Fecha de Fallecimiento: " + this.death_year + "\n";
 
-    public void imprimirInformacion() {
-        System.out.println("*****Autor*****");
-        System.out.println("Nomber:" + nombre);
-        System.out.println("Fecha de nacimiento: "+fechaDeNacimiento);
-        System.out.println("Fecha de fallecimiento: "+fechaDeFallecimiento);
-        System.out.println("Libros: "+libros);
-        System.out.println("");
     }
 }

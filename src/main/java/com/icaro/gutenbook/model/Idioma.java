@@ -8,6 +8,7 @@ public enum Idioma {
     es("Español"),
     en("Inglés"),
     de("Alemán"),
+    fr("Francés"),
     nd("No disponible"),
     ;
 

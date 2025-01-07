@@ -6,6 +6,7 @@ import com.icaro.gutenbook.model.Datos;
 import com.icaro.gutenbook.model.DatosLibro;
 import com.icaro.gutenbook.service.ConsumoAPI;
 import com.icaro.gutenbook.service.ConvierteDatos;
+import com.icaro.gutenbook.service.LibroService;
 import com.icaro.gutenbook.view.Menu;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,14 @@ public class Principal {
     private ConsumoAPI consumoApi = new ConsumoAPI();
     private final String URL_BASE = "https://gutendex.com/books/";
    // private final String API_KEY = "&apikey=4fc7c187";
+
     private ConvierteDatos conversor = new ConvierteDatos();
+    
+     private LibroService servicioLibro;
+
+    public Principal(LibroService service) {
+        this.servicioLibro = service;
+    }
     
     public void muestraMenu(){
        
@@ -68,7 +76,8 @@ public class Principal {
                 
               case 1:
                 System.out.println("Si es opcion 1");
-                buscaLibroWeb();
+                buscarLibroWeb();
+                esEntero = false;
                 break;
                 
               case 2:
@@ -126,34 +135,24 @@ public class Principal {
     }
     }
     
-    
      //Busqueda de libros por nombre
-    private void buscaLibroWeb(){
+    private void buscarLibroWeb() {
         
         Scanner teclado = new Scanner(System.in);
-                
-                
-                    System.out.println("Ingrese el nombre del libro que desea buscar");
-                    var tituloLibro = teclado.nextLine();
-                    var json = consumoApi.obtenerDatos(URL_BASE+"?search=" + tituloLibro.replace(" ","+"));
-                    var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
-                    Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
-                            .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
-                            .findFirst();
-                    if(libroBuscado.isPresent()){
-                        System.out.println("Libro Encontrado ");
-                        System.out.println("Título : "+libroBuscado.get().titulo());
-                        System.out.println("Autores : " + libroBuscado.get().autores());
-                        System.out.println("Idiomas : " + libroBuscado.get().idiomas()); 
-                    }else {
-                        System.out.println("Libro no encontrado");
-                    }
-                 
-                    
-                esEntero = false;
+        System.out.println("Ingrese el nombre del libro que desea buscar");
+        var titulo = teclado.nextLine();
+        servicioLibro.buscarLibroPorTitulo(titulo);
         
-        
-        
-        
+         
     }
+    
+    
+    
+    
+     
+    
+    
+    
+    
+    
 }

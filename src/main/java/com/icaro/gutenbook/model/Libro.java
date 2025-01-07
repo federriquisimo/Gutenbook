@@ -4,73 +4,32 @@
  */
 package com.icaro.gutenbook.model;
 
-
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @Entity
 @Table(name = "libros")
 public class Libro {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String titulo;
-    @ManyToOne
-    private Autor autor;
-    @Enumerated(EnumType.STRING)
-    private Idioma idioma;
-    private Integer numeroDeDescargas;
 
-    public Libro(String titulo, Idioma idioma, Integer numeroDeDescargas, String enlace) {
-        this.titulo = titulo;
-        this.idioma = idioma;
-        this.numeroDeDescargas = numeroDeDescargas;
-    }
+    @JoinTable(name = "autores_libros", joinColumns = @JoinColumn(name = "libros_id"), inverseJoinColumns = @JoinColumn(name = "autor_id"))
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Autor> autor = new ArrayList<Autor>();
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> idiomas;
 
-    public Libro(DatosLibro libro) {
-        this.titulo = libro.titulo();
+    private Boolean copyright;
 
-         Optional<DatosAutor> autor = libro.autores().stream().findFirst();
-        autor.ifPresent(datosAutor -> this.autor = new Autor(datosAutor));
+    private Integer cantidadDescargas;
 
-        Optional<String> idioma = libro.idiomas().stream().findFirst();
-        idioma.ifPresent(s -> this.idioma = Idioma.stringToEnum(s));
-
-        this.numeroDeDescargas = libro.numeroDeDescargas();
-    }
-
-    public Libro() {
-    }
-
-    ;
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public Idioma getIdioma() {
-        return idioma;
-    }
-
-    public void setIdioma(Idioma idioma) {
-        this.idioma = idioma;
-    }
-
-    public Integer getNumeroDeDescargas() {
-        return numeroDeDescargas;
-    }
-
-    public void setNumeroDeDescargas(Integer numeroDeDescargas) {
-        this.numeroDeDescargas = numeroDeDescargas;
-    }
+    //********** Getters and Setters ********//
 
     public Long getId() {
         return id;
@@ -80,25 +39,69 @@ public class Libro {
         this.id = id;
     }
 
-    public Autor getAutor() {
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public List<Autor> getAutor() {
         return autor;
     }
 
-    public void setAutor(Autor autor) {
+    public void setAutor(List<Autor> autor) {
         this.autor = autor;
     }
 
-    public void imprimirInformacion() {
-        System.out.println("*****Libro*****");
-        System.out.println("Titulo:" + titulo);
-        System.out.println("Autor: " + autor.getNombre());
-        System.out.println("Idioma: " + idioma.getIdiomaCompleto());
-        System.out.println("Numero de Descargas: " + numeroDeDescargas);
-        System.out.println("");
+    public List<String> getIdiomas() {
+        return idiomas;
     }
+
+    public void setIdiomas(List<String> idiomas) {
+        this.idiomas = idiomas;
+    }
+
+    public Boolean getCopyright() {
+        return copyright;
+    }
+
+    public void setCopyright(Boolean copyright) {
+        this.copyright = copyright;
+    }
+
+    public Integer getCantidadDescargas() {
+        return cantidadDescargas;
+    }
+
+    public void setCantidadDescargas(Integer cantidadDescargas) {
+        this.cantidadDescargas = cantidadDescargas;
+    }
+
+    // ********** Constructors **********//
+    public Libro(DatosLibro libroBuscado) {
+        this.id = libroBuscado.id();
+        this.titulo = libroBuscado.titulo();
+        this.autor = libroBuscado.autores().stream()
+                .map(da -> new Autor(da.nombre(), da.fechaDeNacimiento(), da.fechaDeFallecimiento()))
+                .toList();
+        this.idiomas = libroBuscado.idioma();
+        this.copyright = libroBuscado.copyright();
+        this.cantidadDescargas = libroBuscado.cantidadDescargas();
+
+
+    }
+
+    public Libro(){}
 
     @Override
     public String toString() {
-        return titulo;
+        return  '\n' + "Titulo = " + titulo + '\n' +
+                "id = " + id + '\n' +
+                 autor + '\n' +
+                "idiomas = " + idiomas + '\n' +
+                "copyright = " + copyright + '\n' +
+                "cantidadDescargas = " + cantidadDescargas + '\n';
     }
 }
