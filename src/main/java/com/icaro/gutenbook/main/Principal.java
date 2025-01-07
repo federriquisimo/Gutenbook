@@ -1,8 +1,9 @@
 package com.icaro.gutenbook.main;
 
 
-import com.icaro.gutenbook.model.Data;
-import com.icaro.gutenbook.model.DataBooks;
+
+import com.icaro.gutenbook.model.Datos;
+import com.icaro.gutenbook.model.DatosLibro;
 import com.icaro.gutenbook.service.ConsumoAPI;
 import com.icaro.gutenbook.service.ConvierteDatos;
 import com.icaro.gutenbook.view.Menu;
@@ -49,7 +50,7 @@ public class Principal {
                        System.exit(0);
                    }else{
                            esEntero = true;
-                           System.out.println("Ls opcion escogida es la : "+ opcion);
+                           System.out.println("La opcion escogida es la : "+ opcion);
                            }
              }catch(Exception e){
                  
@@ -67,25 +68,7 @@ public class Principal {
                 
               case 1:
                 System.out.println("Si es opcion 1");
-                Scanner teclado = new Scanner(System.in);
-                
-                 //Busqueda de libros por nombre
-                    System.out.println("Ingrese el nombre del libro que desea buscar");
-                    var tituloLibro = teclado.nextLine();
-                    var json = consumoApi.obtenerDatos(URL_BASE+"?search=" + tituloLibro.replace(" ","+"));
-                    var datosBusqueda = conversor.obtenerDatos(json, Data.class);
-                    Optional<DataBooks> libroBuscado = datosBusqueda.resultados().stream()
-                            .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
-                            .findFirst();
-                    if(libroBuscado.isPresent()){
-                        System.out.println("Libro Encontrado ");
-                        System.out.println(libroBuscado.get());
-                    }else {
-                        System.out.println("Libro no encontrado");
-                    }
-                 
-                    
-                esEntero = false;
+                buscaLibroWeb();
                 break;
                 
               case 2:
@@ -139,31 +122,38 @@ public class Principal {
         
         
         
-       /* var idioma = input.nextLine();
-        var json = consumoApi.obtenerDatos(URL_BASE+"?languages=" + idioma);
-        //https://www.omdbapi.com/?t=game+of+thrones&apikey=4fc7c187
-        //DatosSerie datos = conversor.obtenerDatos(json, DatosSerie.class);
-        System.out.println(json);*/
-
-     /*   //Busca los datos de todas las temporadas
-        List<DatosTemporada> temporadas = new ArrayList<>();
-
-        for (int i = 1; i <= datos.totalTemporadas(); i++) {
-            json = consumoApi.obtenerDatos(URL_BASE + nombreSerie.replace(" ", "+") + "&Season=" + i + API_KEY);
-            DatosTemporada datosTemporada = conversor.obtenerDatos(json, DatosTemporada.class);
-            temporadas.add(datosTemporada);
-        }
-        temporadas.forEach(System.out::println);
-
-        //Mostrar solo el titulo de los episodios para las temporadas
-        for (int i = 0; i < datos.totalTemporadas(); i++) {
-            List<DatosEpisodio> episodiosTemporadas = temporadas.get(i).episodios();
-            for (int j = 0; j < episodiosTemporadas.size(); j++) {
-                System.out.println(episodiosTemporadas.get(j).titulo());
-            }
-        }
-        // Mejoría usando funciones Lambda
-        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));*/
+       
     }
+    }
+    
+    
+     //Busqueda de libros por nombre
+    private void buscaLibroWeb(){
+        
+        Scanner teclado = new Scanner(System.in);
+                
+                
+                    System.out.println("Ingrese el nombre del libro que desea buscar");
+                    var tituloLibro = teclado.nextLine();
+                    var json = consumoApi.obtenerDatos(URL_BASE+"?search=" + tituloLibro.replace(" ","+"));
+                    var datosBusqueda = conversor.obtenerDatos(json, Datos.class);
+                    Optional<DatosLibro> libroBuscado = datosBusqueda.resultados().stream()
+                            .filter(l -> l.titulo().toUpperCase().contains(tituloLibro.toUpperCase()))
+                            .findFirst();
+                    if(libroBuscado.isPresent()){
+                        System.out.println("Libro Encontrado ");
+                        System.out.println("Título : "+libroBuscado.get().titulo());
+                        System.out.println("Autores : " + libroBuscado.get().autores());
+                        System.out.println("Idiomas : " + libroBuscado.get().idiomas()); 
+                    }else {
+                        System.out.println("Libro no encontrado");
+                    }
+                 
+                    
+                esEntero = false;
+        
+        
+        
+        
     }
 }
