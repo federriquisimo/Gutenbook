@@ -72,33 +72,9 @@ public class LibroService {
         librosIdioma.stream().forEach(System.out::println);
     }
 
-    public void obtenerDatosEstadisticos() {
-        List<Libro> librosRepo = repoLibro.findAll();
-        ArrayList<Libro> libros = new ArrayList<Libro>(librosRepo);
-        DoubleSummaryStatistics data = libros.stream().collect(Collectors.summarizingDouble(Libro::getCantidadDescargas));
-        System.out.println(
-                "----- DATOS DE LOS LIBROS -----"+
-                        "\nMedia de descargas: "+ String.format("%1.2f", data.getAverage())+
-                        "\nMayor descargada: "+data.getMax()+
-                        "\nMenor descargada "+data.getMin()+
-                        "\nCantidad de libros almacenados: "+data.getCount()+
-                        "\n------------------------------");
-    }
+    
 
-    public void obtenerTopLibros() {
-        List<Libro> topLibros = repoLibro.obtenerTopLibros();
-        topLibros.forEach(System.out::println);
-    }
-
-    public void obtenerAutor(String nombre) {
-        Autor autor = repoLibro.encontrarAutor(nombre);
-        System.out.println(autor.toString());
-    }
-
-    public void obtenerAutoresVivosRango(int anioDesde, int anioHasta) {
-        List<Autor> autores = repoLibro.obtenerAutoresVivosRango(anioDesde, anioHasta);
-        autores.forEach(System.out::println);
-    }
+    
 
 
 

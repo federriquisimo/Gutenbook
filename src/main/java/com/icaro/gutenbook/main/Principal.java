@@ -82,40 +82,37 @@ public class Principal {
                 
               case 2:
                 System.out.println("Si es opcion 2");
-                esEntero = false;
+                listarLibros();
+                esEntero = false;                
                 break;
                 
               case 3:
                 System.out.println("Si es opcion 3");
+                listarAutores();
                 esEntero = false;
                 break;
                 
               case 4:
                 System.out.println("Si es opcion 4");
+                listarAutoresVivos();
                 esEntero = false;
                 break;
                 
                case 5:
                 System.out.println("Si es opcion 5");
-                idioma = "es";
-                var jsonES = consumoApi.obtenerDatos(URL_BASE+"?languages=" + idioma);
-                System.out.println(jsonES);
+                listarLibroPorIdioma("es");
                 esEntero = false;
                break;  
                
                  case 6:
                 System.out.println("Si es opcion 6");
-                idioma = "en";
-                var jsonEN = consumoApi.obtenerDatos(URL_BASE+"?languages=" + idioma);
-                System.out.println(jsonEN);
+                listarLibroPorIdioma("en");
                 esEntero = false;
                 break;
                 
                  case 7:
                 System.out.println("Si es opcion 7");
-                idioma = "de";
-                var jsonDE = consumoApi.obtenerDatos(URL_BASE+"?languages=" + idioma);
-                System.out.println(jsonDE);
+                 listarLibroPorIdioma("de");
                  esEntero = false;
                 break;
                 
@@ -135,7 +132,7 @@ public class Principal {
     }
     }
     
-     //Busqueda de libros por nombre
+     //Busqueda de libros por nombre en API
     private void buscarLibroWeb() {
         
         Scanner teclado = new Scanner(System.in);
@@ -146,11 +143,32 @@ public class Principal {
          
     }
     
+    // Listar libros de la BD
     
+     private void listarLibros() {
+        servicioLibro.listaLibros();
+    }
     
-    
+     // Listar autores de la BD
+     
+      private void listarAutores() {
+        servicioLibro.listaAutores();
+    }
+      
+    // Autores vivos en un años determinado
+      private void listarAutoresVivos() {
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Ingresa el tal  año");
+        int agnio = Integer.parseInt(teclado.nextLine());
+        servicioLibro.listaAutoresVivos(agnio);
+    }
      
     
+      // Libros por idioma
+       private void listarLibroPorIdioma(String idioma) {
+        
+       servicioLibro.ListaLibrosPorIdioma(idioma);
+    }
     
     
     
